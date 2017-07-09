@@ -1,8 +1,9 @@
 BASE_URL = "https://therapists.psychologytoday.com/rms/prof_results.php?sid=1499561046.1827_32152&city=San+Francisco&state=CA&rec_next="
-API_URL = "https://pt-scrape-api.herokuapp.com//?url="
+API_URL = "https://ptscrapeapi.herokuapp.com//?url="
 
 def extract_therapist_urls(url)
   page = Nokogiri::HTML(open(url))
+  sleep(3)
   page.css('.result-name').each{|div| @therapist_urls << div["href"]}
 end
 
@@ -23,8 +24,9 @@ list_urls.each{|url|extract_therapist_urls(url)}
 
 #Query API and generate therapists
 @therapist_urls.each do |url|
-  response = query_api(url)
-  if response[:data] != "invalid search criteria"
+  long_response = query_api(url)
+  if long_response[:data] != "invalid search criteria"
+    response = long_response[:data]
     therapist = Therapist.new
     therapist.pt_id = response.fetch(:pt_id)
     therapist.name = response.fetch(:name)
@@ -91,11 +93,11 @@ list_urls.each{|url|extract_therapist_urls(url)}
         TherapistIssue.create(therapist_id: therapist.id, issue_id: i_object.id)
       end
     end
-    
+
   end
 end
 
-#   #CREATE MDOELS FOR EACH OF THE API CALLS
+  #CREATE MDOELS FOR EACH OF THE API CALLS
 
 # end
 
@@ -188,7 +190,7 @@ end
 
 # response = long_response[:data]
 
-#     therapist = Therapist.new
+# therapist = Therapist.new
 #     therapist.pt_id = response.fetch(:pt_id)
 #     therapist.name = response.fetch(:name)
 #     therapist.title = response.fetch(:title)
@@ -217,4 +219,40 @@ end
 #     therapist.accepted_insurance = response.fetch(:accepted_insurance)
 #     therapist.accepted_payments = response.fetch(:accepted_payments)
 #     therapist.save
-#create a therapist
+#     #create a therapist
+
+#     #create many to many relationship
+#     if response[:client_ethnicities] != "none provided"
+#       response[:client_ethnicities].each do |ethnicity|
+#         ce_object = ClientEthnicity.find_or_create_by(name: ethnicity)
+#         TherapistClientEthnicity.create(therapist_id: therapist.id, client_ethnicity_id: ce_object.id)
+#       end
+#     end
+
+#     if response[:client_languages] != "none provided"
+#       response[:client_languages].each do |language|
+#         l_object = ClientLanguage.find_or_create_by(name: language)
+#         TherapistClientLanguage.create(therapist_id: therapist.id, client_language_id: l_object.id)
+#       end
+#     end
+
+#     if response[:client_categories] != "none provided"
+#       response[:client_categories].each do |category|
+#         cc_object = ClientCategory.find_or_create_by(name: category)
+#         TherapistClientCategory.create(therapist_id: therapist.id, client_category_id: cc_object.id)
+#       end
+#     end
+
+#     if response[:target_issues] != "none provided"
+#       response[:target_issues].each do |issue|
+#         ti_object = TargetIssue.find_or_create_by(name: issue)
+#         TherapistTargetIssue.create(therapist_id: therapist.id, target_issue_id: ti_object.id)
+#       end
+#     end
+
+#     if response[:issues] != "none provided"
+#       response[:issues].each do |issue|
+#         i_object = Issue.find_or_create_by(name: issue)
+#         TherapistIssue.create(therapist_id: therapist.id, issue_id: i_object.id)
+#       end
+#     end
