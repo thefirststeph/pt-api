@@ -64,34 +64,35 @@ list_urls.each{|url|extract_therapist_urls(url)}
       end
     end
 
-   if response[:client_languages] != "none provided"
-    response[:client_languages].each do |language|
-      l_object = ClientLanguage.find_or_create_by(name: language)
-      TherapistClientLanguage.create(therapist_id: therapist.id, client_language_id: l_object.id)
+    if response[:client_languages] != "none provided"
+      response[:client_languages].each do |language|
+        l_object = ClientLanguage.find_or_create_by(name: language)
+        TherapistClientLanguage.create(therapist_id: therapist.id, client_language_id: l_object.id)
+      end
     end
-  end
 
-  if response[:client_categories] != "none provided"
-    response[:client_categories].each do |category|
-      cc_object = ClientCategory.find_or_create_by(name: category)
-      TherapistClientCategory.create(therapist_id: therapist.id, client_category_id: cc_object.id)
+    if response[:client_categories] != "none provided"
+      response[:client_categories].each do |category|
+        cc_object = ClientCategory.find_or_create_by(name: category)
+        TherapistClientCategory.create(therapist_id: therapist.id, client_category_id: cc_object.id)
+      end
     end
-  end
 
-  if response[:target_issues] != "none provided"
-    response[:target_issues].each do |issue|
-      ti_object = TargetIssue.find_or_create_by(name: issue)
-      TherapistTargetIssue.create(therapist_id: therapist.id, target_issue_id: ti_object.id)
+    if response[:target_issues] != "none provided"
+      response[:target_issues].each do |issue|
+        ti_object = TargetIssue.find_or_create_by(name: issue)
+        TherapistTargetIssue.create(therapist_id: therapist.id, target_issue_id: ti_object.id)
+      end
     end
-  end
 
-  if response[:issues] != "none provided"
-    response[:issues].each do |issue|
-      i_object = Issue.find_or_create_by(name: issue)
-      TherapistIssue.create(therapist_id: therapist.id, issue_id: i_object.id)
+    if response[:issues] != "none provided"
+      response[:issues].each do |issue|
+        i_object = Issue.find_or_create_by(name: issue)
+        TherapistIssue.create(therapist_id: therapist.id, issue_id: i_object.id)
+      end
     end
+    
   end
-end
 end
 
 #   #CREATE MDOELS FOR EACH OF THE API CALLS
@@ -216,4 +217,4 @@ end
 #     therapist.accepted_insurance = response.fetch(:accepted_insurance)
 #     therapist.accepted_payments = response.fetch(:accepted_payments)
 #     therapist.save
-    #create a therapist
+#create a therapist
