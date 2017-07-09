@@ -1,0 +1,5 @@
+class Therapist < ApplicationRecord
+
+end
+
+

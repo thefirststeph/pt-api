@@ -1,7 +1,35 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+BASE_URL = "https://therapists.psychologytoday.com/rms/prof_results.php?sid=1499561046.1827_32152&city=San+Francisco&state=CA&rec_next="
+API_URL = "https://pt-scrape-api.herokuapp.com//?url="
+
+def extract_therapist_urls(url)
+  page = Nokogiri::HTML(open(url))
+  page.css('.result-name').each{|div| @therapist_urls << div["href"]}
+end
+
+def query_api(url)
+  response = HTTParty.get(API_URL+url)
+  @data << response
+end
+
+
+@data = []
+
+# generate a list of urls to grab profiles from
+@therapist_urls = []
+# list_urls = (1..1861).step(20).map{|num| BASE_URL + (num.to_s)}
+list_urls = (1..61).step(20).map{|num| BASE_URL + (num.to_s)}
+list_urls.each{|url|extract_therapist_urls(url)}
+
+
+#Query API and generate therapists
+@therapist_urls.each do |url|
+  response = query_api(url)
+  therapist = Therapist.new
+  if response[:data] != "invalid search criteria"
+    response[:data].keys.each
+  end
+
+
+  #CREATE MDOELS FOR EACH OF THE API CALLS
+
+end
