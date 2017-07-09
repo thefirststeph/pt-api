@@ -1,6 +1,6 @@
 class TherapistClientLanguage < ApplicationRecord
-  belongs_to :therapists
-  belongs_to :client_languages
+  belongs_to :therapist
+  belongs_to :client_language
 end
 
 

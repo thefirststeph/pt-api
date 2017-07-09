@@ -1,6 +1,6 @@
 class TherapistTargetIssue < ApplicationRecord
-  belongs_to :therapists
-  belongs_to :target_issues
+  belongs_to :therapist
+  belongs_to :target_issue
 end
 
 

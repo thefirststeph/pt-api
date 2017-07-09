@@ -1,6 +1,6 @@
 class TherapistClientEthnicity < ApplicationRecord
-  has_many :therapists
-  has_many :client_ethnicities
+  belongs_to :therapist
+  belongs_to :client_ethnicity
 end
 
 
