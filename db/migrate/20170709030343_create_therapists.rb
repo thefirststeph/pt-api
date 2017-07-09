@@ -10,19 +10,19 @@ class CreateTherapists < ActiveRecord::Migration[5.0]
       t.string :state
       t.string :zipcode
       t.string :blurb
-      t.string :yrs_practice
+      t.integer :yrs_practice
       t.string :school
-      t.string :yr_graduated
+      t.integer :yr_graduated
       t.string :license_no
       t.string :license_state
-      t.string :client_ethnicities
-      t.string :client_languages
+      # t.string :client_ethnicities
+      # t.string :client_languages
       t.string :client_ages
-      t.string :client_categories
+      # t.string :client_categories
       t.string :treatment_modalities
       t.string :treatment_orientation
-      t.string :target_issues
-      t.string :issues
+      # t.string :target_issues
+      # t.string :issues
       t.string :avg_cost
       t.string :sliding_scale
       t.string :takes_insurance

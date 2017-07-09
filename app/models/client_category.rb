@@ -1,0 +1,2 @@
+class ClientCategory < ApplicationRecord
+end

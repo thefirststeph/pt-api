@@ -26,7 +26,17 @@ list_urls.each{|url|extract_therapist_urls(url)}
   response = query_api(url)
   therapist = Therapist.new
   if response[:data] != "invalid search criteria"
-    response[:data].keys.each
+    if response[:data][:client_ethnicities] != "none provided"
+      response[:data][:client_ethnicities].each do |ethnicity|
+       ClientEthnicities.find_or_create(name: ethnicity)
+
+       #create many to many relationship
+      end
+    end
+    response[:data][:client_languages]
+    response[:data][:client_categories]
+    response[:data][:target_issues]
+    response[:data][:issues]
   end
 
 
