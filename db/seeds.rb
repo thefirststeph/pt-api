@@ -1,3 +1,5 @@
+require 'open-uri'
+
 BASE_URL = "https://therapists.psychologytoday.com/rms/prof_results.php?sid=1499561046.1827_32152&city=San+Francisco&state=CA&rec_next="
 API_URL = "https://ptscrapeapi.herokuapp.com//?url="
 
@@ -8,12 +10,8 @@ def extract_therapist_urls(url)
 end
 
 def query_api(url)
-  response = HTTParty.get(API_URL+url)
-  @data << response
+  HTTParty.get(API_URL+url)
 end
-
-
-@data = []
 
 # generate a list of urls to grab profiles from
 @therapist_urls = []
