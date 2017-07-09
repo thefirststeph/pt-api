@@ -16,83 +16,90 @@ end
 # generate a list of urls to grab profiles from
 @therapist_urls = []
 # list_urls = (1..1861).step(20).map{|num| BASE_URL + (num.to_s)}
-list_urls = (1..61).step(20).map{|num| BASE_URL + (num.to_s)}
+list_urls = (1..21).step(20).map{|num| BASE_URL + (num.to_s)}
 list_urls.each{|url|extract_therapist_urls(url)}
-
+@count = 0
 
 #Query API and generate therapists
 @therapist_urls.each do |url|
+  p url
+  begin
   long_response = query_api(url)
-  if long_response[:data] != "invalid search criteria"
-    response = long_response[:data]
+  if long_response["data"] != "invalid search criteria"
+    response = long_response["data"]
     therapist = Therapist.new
-    therapist.pt_id = response.fetch(:pt_id)
-    therapist.name = response.fetch(:name)
-    therapist.title = response.fetch(:title)
-    therapist.phone = response.fetch(:phone)
-    therapist.street_address = response.fetch(:street_address)
-    therapist.locality = response.fetch(:locality)
-    therapist.state = response.fetch(:state)
-    therapist.zipcode = response.fetch(:zipcode)
-    therapist.blurb = response.fetch(:blurb)
-    therapist.yrs_practice = response.fetch(:yrs_practice)
-    therapist.school = response.fetch(:school)
-    therapist.yr_graduated = response.fetch(:yr_graduated)
-    therapist.license_no = response.fetch(:license_no)
-    therapist.license_state = response.fetch(:license_state)
-    # therapist.client_ethnicities = response.fetch(:client_ethnicities)
-    # therapist.client_languages = response.fetch(:client_languages)
-    therapist.client_ages = response.fetch(:client_ages)
-    # therapist.client_categories = response.fetch(:client_categories)
-    therapist.treatment_modalities = response.fetch(:treatment_modalities)
-    therapist.treatment_orientation = response.fetch(:treatment_orientation)
-    # therapist.target_issues = response.fetch(:target_issues)
-    # therapist.issues = response.fetch(:issues)
-    therapist.avg_cost = response.fetch(:avg_cost)
-    therapist.sliding_scale = response.fetch(:sliding_scale)
-    therapist.takes_insurance = response.fetch(:takes_insurance)
-    therapist.accepted_insurance = response.fetch(:accepted_insurance)
-    therapist.accepted_payments = response.fetch(:accepted_payments)
+    therapist.pt_id = response["pt_id"]
+    therapist.name = response["name"]
+    p therapist.name
+    therapist.title = response["title"]
+    therapist.phone = response["phone"]
+    therapist.street_address = response["street_address"]
+    therapist.locality = response["locality"]
+    therapist.state = response["state"]
+    therapist.zipcode = response["zipcode"]
+    therapist.blurb = response["blurb"]
+    therapist.yrs_practice = response["yrs_practice"]
+    therapist.school = response["school"]
+    therapist.yr_graduated = response["yr_graduated"]
+    therapist.license_no = response["license_no"]
+    therapist.license_state = response["license_state"]
+    # therapist.client_ethnicities = response["client_ethnicities"]
+    # therapist.client_languages = response["client_languages"]
+    therapist.client_ages = response["client_ages"]
+    # therapist.client_categories = response["client_categories"]
+    therapist.treatment_modalities = response["treatment_modalities"]
+    therapist.treatment_orientation = response["treatment_orientation"]
+    # therapist.target_issues = response["target_issues"]
+    # therapist.issues = response["issues"]
+    therapist.avg_cost = response["avg_cost"]
+    therapist.sliding_scale = response["sliding_scale"]
+    therapist.takes_insurance = response["takes_insurance"]
+    therapist.accepted_insurance = response["accepted_insurance"]
+    therapist.accepted_payments = response["accepted_payments"]
     therapist.save
     #create a therapist
 
     #create many to many relationship
-    if response[:client_ethnicities] != "none provided"
-      response[:client_ethnicities].each do |ethnicity|
+    if response["client_ethnicities"] != "none provided"
+      response["client_ethnicities"].each do |ethnicity|
         ce_object = ClientEthnicity.find_or_create_by(name: ethnicity)
         TherapistClientEthnicity.create(therapist_id: therapist.id, client_ethnicity_id: ce_object.id)
       end
     end
 
-    if response[:client_languages] != "none provided"
-      response[:client_languages].each do |language|
+    if response["client_languages"] != "none provided"
+      response["client_languages"].each do |language|
         l_object = ClientLanguage.find_or_create_by(name: language)
         TherapistClientLanguage.create(therapist_id: therapist.id, client_language_id: l_object.id)
       end
     end
 
-    if response[:client_categories] != "none provided"
-      response[:client_categories].each do |category|
+    if response["client_categories"] != "none provided"
+      response["client_categories"].each do |category|
         cc_object = ClientCategory.find_or_create_by(name: category)
         TherapistClientCategory.create(therapist_id: therapist.id, client_category_id: cc_object.id)
       end
     end
 
-    if response[:target_issues] != "none provided"
-      response[:target_issues].each do |issue|
+    if response["target_issues"] != "none provided"
+      response["target_issues"].each do |issue|
         ti_object = TargetIssue.find_or_create_by(name: issue)
         TherapistTargetIssue.create(therapist_id: therapist.id, target_issue_id: ti_object.id)
       end
     end
 
-    if response[:issues] != "none provided"
-      response[:issues].each do |issue|
+    if response["issues"] != "none provided"
+      response["issues"].each do |issue|
         i_object = Issue.find_or_create_by(name: issue)
         TherapistIssue.create(therapist_id: therapist.id, issue_id: i_object.id)
       end
     end
 
   end
+  rescue 
+  end
+  @count += 1
+  p "SEEDING NUMBER: #{@count}"
 end
 
   #CREATE MDOELS FOR EACH OF THE API CALLS
@@ -189,33 +196,33 @@ end
 # response = long_response[:data]
 
 # therapist = Therapist.new
-#     therapist.pt_id = response.fetch(:pt_id)
-#     therapist.name = response.fetch(:name)
-#     therapist.title = response.fetch(:title)
-#     therapist.phone = response.fetch(:phone)
-#     therapist.street_address = response.fetch(:street_address)
-#     therapist.locality = response.fetch(:locality)
-#     therapist.state = response.fetch(:state)
-#     therapist.zipcode = response.fetch(:zipcode)
-#     therapist.blurb = response.fetch(:blurb)
-#     therapist.yrs_practice = response.fetch(:yrs_practice)
-#     therapist.school = response.fetch(:school)
-#     therapist.yr_graduated = response.fetch(:yr_graduated)
-#     therapist.license_no = response.fetch(:license_no)
-#     therapist.license_state = response.fetch(:license_state)
-#     # therapist.client_ethnicities = response.fetch(:client_ethnicities)
-#     # therapist.client_languages = response.fetch(:client_languages)
-#     therapist.client_ages = response.fetch(:client_ages)
-#     # therapist.client_categories = response.fetch(:client_categories)
-#     therapist.treatment_modalities = response.fetch(:treatment_modalities)
-#     therapist.treatment_orientation = response.fetch(:treatment_orientation)
-#     # therapist.target_issues = response.fetch(:target_issues)
-#     # therapist.issues = response.fetch(:issues)
-#     therapist.avg_cost = response.fetch(:avg_cost)
-#     therapist.sliding_scale = response.fetch(:sliding_scale)
-#     therapist.takes_insurance = response.fetch(:takes_insurance)
-#     therapist.accepted_insurance = response.fetch(:accepted_insurance)
-#     therapist.accepted_payments = response.fetch(:accepted_payments)
+#     therapist.pt_id = response["pt_id)
+#     therapist.name = response["name)
+#     therapist.title = response["title)
+#     therapist.phone = response["phone)
+#     therapist.street_address = response["street_address)
+#     therapist.locality = response["locality)
+#     therapist.state = response["state)
+#     therapist.zipcode = response["zipcode)
+#     therapist.blurb = response["blurb)
+#     therapist.yrs_practice = response["yrs_practice)
+#     therapist.school = response["school)
+#     therapist.yr_graduated = response["yr_graduated)
+#     therapist.license_no = response["license_no)
+#     therapist.license_state = response["license_state)
+#     # therapist.client_ethnicities = response["client_ethnicities)
+#     # therapist.client_languages = response["client_languages)
+#     therapist.client_ages = response["client_ages)
+#     # therapist.client_categories = response["client_categories)
+#     therapist.treatment_modalities = response["treatment_modalities)
+#     therapist.treatment_orientation = response["treatment_orientation)
+#     # therapist.target_issues = response["target_issues)
+#     # therapist.issues = response["issues)
+#     therapist.avg_cost = response["avg_cost)
+#     therapist.sliding_scale = response["sliding_scale)
+#     therapist.takes_insurance = response["takes_insurance)
+#     therapist.accepted_insurance = response["accepted_insurance)
+#     therapist.accepted_payments = response["accepted_payments)
 #     therapist.save
 #     #create a therapist
 
