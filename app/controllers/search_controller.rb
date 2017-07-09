@@ -19,7 +19,7 @@ class SearchController < ApplicationController
 	  	end	
   	end
 
-  	if params[:client_language]
+  	if params[:client_category]
 	  	client_category = ClientCategory.find_by(name: params[:client_category])
 	  	cc_therapists = client_category.therapists
 	  	cc_therapists.each do |therapist| 
@@ -39,7 +39,8 @@ class SearchController < ApplicationController
 	  	client_ethnicity = ClientEthnicity.find_by(name: params[:client_ethnicity])
 	  	ce_therapists = client_ethnicity.therapists
 	  	cc_therapists.each do |therapist|
-	  		running_hash[therapist.id] == nil ? running_hash[therapist.id] = params[:ce_value].to_i : running_hash[therapist.id] += (params[:ce_value].to_i)}
+	  		running_hash[therapist.id] == nil ? running_hash[therapist.id] = params[:ce_value].to_i : running_hash[therapist.id] += (params[:ce_value].to_i)
+	  	end
   	end
 
   	therapist_sorted_id = running_hash.sort_by{|key,value| value}.to_h.keys
